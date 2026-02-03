@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Candidate CV Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <h1 class="mb-4">Candidate CV Portal</h1>
+
+    <!-- Ingest CV -->
+    <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Upload CV</h5>
+            <form action="/ingest" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input type="text" name="name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">CV File (PDF or DOCX)</label>
+                    <input type="file" name="file" class="form-control" accept=".pdf,.docx" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+            {% if message %}
+                <div class="alert alert-info mt-3">{{ message }}</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Search CVs -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Search Candidates</h5>
+            <form action="/search" method="post">
+                <div class="input-group mb-3">
+                    <input type="text" name="query" class="form-control" placeholder="Enter keywords..." required>
+                    <button type="submit" class="btn btn-success">Search</button>
+                </div>
+            </form>
+
+            {% if results %}
+                <h6>Results for "{{ query }}"</h6>
+                <table class="table table-bordered mt-2">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>CV Snippet</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in results %}
+                        <tr>
+                            <td>{{ r[0] }}</td>
+                            <td>{{ r[1] }}</td>
+                            <td>{{ r[2][:200] }}{% if r[2]|length > 200 %}...{% endif %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</body>
+</html>
